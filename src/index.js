@@ -8,14 +8,34 @@ server.connection({
   host: 'localhost',
   port: 8000
 });
+
+//获取参数的方式
+//1 路径参数
+//2 查询参数
+//3 默认值
+const getName = request => {
+  let names = request.params.name ? request.params.name.split('/') : [];
+  let nameObj = {};
+  if(names.length>0){
+    nameObj = {
+      fname : names[0],
+      lname : names[1]
+    }
+  }
+  return Object.assign({
+    fname: 'www',
+    lname: 'yyy'
+  }, nameObj, request.query)
+}
+
 server.route({
   method: 'GET',
-  path: '/hello',
+  path: '/hello/{name*}',
   handler: function(request, reply){
 
     //取回模板并且编译返回
     nunjucks.render('./dist/index.html', {
-      fname: 'wu11', lname: 'yang'
+      ...getName(request)
     }, function(err, html){
       //返回html
       console.log(err);
