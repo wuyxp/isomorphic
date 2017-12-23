@@ -3,6 +3,7 @@ import Hapi from 'hapi';
 import nunjucks from 'nunjucks';
 
 import Application from './lib';
+import Controller from './lib/Controller';
 
 //创建一个服务器，并配置主机名和端口
 const server = new Hapi.Server();
@@ -31,12 +32,8 @@ const getName = request => {
 }
 
 const application  = new Application({
-  //相应
-  '/{name*}': function(request, reply){
-    nunjucks.render('./dist/index.html', { ...getName(request) }, function(err, html){
-      reply(err || html);
-    })
-  }
+  //将响应内容传至控制器中
+  '/{name*}': Controller
 }, {
   server
 })

@@ -1,7 +1,5 @@
 'use strict';
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _hapi = require('hapi');
 
 var _hapi2 = _interopRequireDefault(_hapi);
@@ -13,6 +11,10 @@ var _nunjucks2 = _interopRequireDefault(_nunjucks);
 var _lib = require('./lib');
 
 var _lib2 = _interopRequireDefault(_lib);
+
+var _Controller = require('./lib/Controller');
+
+var _Controller2 = _interopRequireDefault(_Controller);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -43,12 +45,8 @@ var getName = function getName(request) {
 };
 
 var application = new _lib2.default({
-  //相应
-  '/{name*}': function name(request, reply) {
-    _nunjucks2.default.render('./dist/index.html', _extends({}, getName(request)), function (err, html) {
-      reply(err || html);
-    });
-  }
+  //将响应内容传至控制器中
+  '/{name*}': _Controller2.default
 }, {
   server: server
 });
