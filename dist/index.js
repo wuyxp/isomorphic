@@ -29,11 +29,24 @@ server.connection({
   port: 8000
 });
 
+//全局配置nunjuks不能自动转义
+_nunjucks2.default.configure({
+  autoescape: false
+});
+
 var application = new _lib2.default({
   //将响应内容传至控制器中
   '/': _Controller2.default,
   '/hello/{name*}': _HelloController2.default
 }, {
-  server: server
+  server: server,
+  document: function document(application, controller, request, reply, body, callback) {
+    _nunjucks2.default.render('./dist/index.html', { body: body }, function (err, html) {
+      if (err) {
+        return callback(err, null);
+      }
+      callback(null, html);
+    });
+  }
 });
 application.start();

@@ -37,7 +37,7 @@ var HolleController = function (_Controller) {
   _createClass(HolleController, [{
     key: 'toString',
     value: function toString(callback) {
-      _nunjucks2.default.render('./dist/index.html', (0, _Utils.getName)(this.context), function (err, html) {
+      _nunjucks2.default.renderString('<p>hello {{fname}} {{lname}} </p>', (0, _Utils.getName)(this.context), function (err, html) {
         if (err) {
           return callback(err, null);
         }

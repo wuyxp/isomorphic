@@ -13,11 +13,24 @@ server.connection({
   port: 8000
 });
 
+//全局配置nunjuks不能自动转义
+nunjucks.configure({
+  autoescape: false
+});
+
 const application  = new Application({
   //将响应内容传至控制器中
   '/': Controller,
   '/hello/{name*}': HelloController
 }, {
-  server
+  server,
+  document: function(application, controller, request, reply, body, callback){
+    nunjucks.render('./dist/index.html', { body }, (err, html) => {
+      if(err){
+        return callback(err, null);
+      }
+      callback(null, html)
+    })
+  }
 })
 application.start();

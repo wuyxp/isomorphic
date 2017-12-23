@@ -5,7 +5,7 @@ import { getName } from './Utils.js';
 import Controller from './Controller';
 export default class HolleController extends Controller{
   toString(callback){
-    nunjucks.render('./dist/index.html', getName(this.context), (err, html) => {
+    nunjucks.renderString('<p>hello {{fname}} {{lname}} </p>', getName(this.context), (err, html) => {
       if(err){
         return callback(err, null);
       }

@@ -10,6 +10,7 @@
 export default class Application {
   constructor(routes, options){
     this.server = options.server;
+    this.document = options.document;
     this.registerRoutes(routes);
   }
   registerRoutes(routes){
@@ -31,7 +32,12 @@ export default class Application {
             if(err){
               return replay(err)
             }
-            reply(html)
+            this.document(this, controller, request, reply, html, (err, html) => {
+              if(err){
+                return reply(err)
+              }
+              reply(html)
+            });
           })
         })
       }
