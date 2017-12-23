@@ -41,6 +41,7 @@ var application = new _lib2.default({
 }, {
   server: server,
   document: function document(application, controller, request, reply, body, callback) {
+    // 只是将传过来的body与html模板组装好，并且返回给application的document回调函数进行reply
     _nunjucks2.default.render('./dist/index.html', { body: body }, function (err, html) {
       if (err) {
         return callback(err, null);

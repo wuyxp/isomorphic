@@ -23,6 +23,8 @@ export default class Application {
       path,
       method: 'GET',
       handler: (request, reply) => {
+        //将每个路由对应的controller实例化，并且将参数传入进去
+        // 按照顺序执行，index-》toString（将组装好body后的html返回来，准备调用实例化application中的document方法）
         const controller = new Controller({...request});
         controller.index(this, request, reply, err => {
           if(err){
@@ -33,6 +35,7 @@ export default class Application {
               return replay(err)
             }
             this.document(this, controller, request, reply, html, (err, html) => {
+              // 将document的html传入到index路由定义中，再返回来的时候是组装好的html字符串
               if(err){
                 return reply(err)
               }

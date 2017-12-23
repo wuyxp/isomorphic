@@ -38,6 +38,7 @@ var HolleController = function (_Controller) {
     key: 'toString',
     value: function toString(callback) {
       _nunjucks2.default.renderString('<p>hello {{fname}} {{lname}} </p>', (0, _Utils.getName)(this.context), function (err, html) {
+        //将生成后的body字符串，传入application的addRouter方法中
         if (err) {
           return callback(err, null);
         }

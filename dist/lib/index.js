@@ -54,6 +54,7 @@ var Application = function () {
                 return replay(err);
               }
               _this.document(_this, controller, request, reply, html, function (err, html) {
+                // 将document的html传入到index路由定义中，再返回来的时候是组装好的html字符串
                 if (err) {
                   return reply(err);
                 }

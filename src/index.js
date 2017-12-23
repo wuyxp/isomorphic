@@ -25,6 +25,7 @@ const application  = new Application({
 }, {
   server,
   document: function(application, controller, request, reply, body, callback){
+    // 只是将传过来的body与html模板组装好，并且返回给application的document回调函数进行reply
     nunjucks.render('./dist/index.html', { body }, (err, html) => {
       if(err){
         return callback(err, null);
