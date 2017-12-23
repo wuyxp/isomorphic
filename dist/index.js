@@ -10,6 +10,10 @@ var _nunjucks = require('nunjucks');
 
 var _nunjucks2 = _interopRequireDefault(_nunjucks);
 
+var _lib = require('./lib');
+
+var _lib2 = _interopRequireDefault(_lib);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //创建一个服务器，并配置主机名和端口
@@ -35,21 +39,17 @@ var getName = function getName(request) {
   return Object.assign({
     fname: 'www',
     lname: 'yyy'
-  }, nameObj, request.query);
+  }, request.query, nameObj);
 };
 
-server.route({
-  method: 'GET',
-  path: '/hello/{name*}',
-  handler: function handler(request, reply) {
-
-    //取回模板并且编译返回
+var application = new _lib2.default({
+  //相应
+  '/{name*}': function name(request, reply) {
     _nunjucks2.default.render('./dist/index.html', _extends({}, getName(request)), function (err, html) {
-      //返回html
-      console.log(err);
-      reply(html);
+      reply(err || html);
     });
-    //reply('报错啦,world');
   }
+}, {
+  server: server
 });
-server.start();
+application.start();

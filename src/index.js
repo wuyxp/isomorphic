@@ -2,6 +2,8 @@ import Hapi from 'hapi';
 
 import nunjucks from 'nunjucks';
 
+import Application from './lib';
+
 //创建一个服务器，并配置主机名和端口
 const server = new Hapi.Server();
 server.connection({
@@ -25,23 +27,17 @@ const getName = request => {
   return Object.assign({
     fname: 'www',
     lname: 'yyy'
-  }, nameObj, request.query)
+  }, request.query, nameObj);
 }
 
-server.route({
-  method: 'GET',
-  path: '/hello/{name*}',
-  handler: function(request, reply){
-
-    //取回模板并且编译返回
-    nunjucks.render('./dist/index.html', {
-      ...getName(request)
-    }, function(err, html){
-      //返回html
-      console.log(err);
-      reply(html)
-    });
-    //reply('报错啦,world');
+const application  = new Application({
+  //相应
+  '/{name*}': function(request, reply){
+    nunjucks.render('./dist/index.html', { ...getName(request) }, function(err, html){
+      reply(err || html);
+    })
   }
+}, {
+  server
 })
-server.start();
+application.start();
