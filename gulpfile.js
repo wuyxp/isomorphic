@@ -4,6 +4,22 @@ var babel = require('gulp-babel');
 var nodemon = require('gulp-nodemon');
 var sequence = require('run-sequence');
 
+//浏览器所需要的工程文件
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
+
+//浏览器的bundle任务
+gulp.task('bundle', function(){
+  var b = browserify({
+    entries: 'src/index.client.js',
+    debug: true,
+  })
+  .transform('babelify', {presets:['es2015']});
+  return b.bundle()
+    .pipe(source('build/application.js'))
+    .pipe(gulp.dest('dist'));
+});
+
 // 编译源文件
 gulp.task('compile', function(){
   return gulp.src('src/**/*.js')
@@ -31,11 +47,11 @@ gulp.task('start', function(){
 });
 
 gulp.task('watch', function(){
-  gulp.watch('src/**/*.js', ['compile']);
+  gulp.watch('src/**/*.js', ['compile','bundle']);
   gulp.watch('src/**/*.html', ['copy']);
 });
 
 gulp.task('default', function(callback){
-  sequence(['compile', 'copy', 'watch'], 'start', callback);
+  sequence(['compile', 'bundle', 'copy', 'watch'], 'start', callback);
   console.log('watch-compile--success');
 })

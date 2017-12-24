@@ -18,6 +18,8 @@ nunjucks.configure({
   autoescape: false
 });
 
+const APP_FILE_PATH = '/application.js'
+
 const application  = new Application({
   //将响应内容传至控制器中
   '/': Controller,
@@ -26,7 +28,7 @@ const application  = new Application({
   server,
   document: function(application, controller, request, reply, body, callback){
     // 只是将传过来的body与html模板组装好，并且返回给application的document回调函数进行reply
-    nunjucks.render('./dist/index.html', { body }, (err, html) => {
+    nunjucks.render('./dist/index.html', { body, application:APP_FILE_PATH }, (err, html) => {
       if(err){
         return callback(err, null);
       }
@@ -34,4 +36,12 @@ const application  = new Application({
     })
   }
 })
+server.route({
+  method: 'GET',
+  path: APP_FILE_PATH,
+  handler: (request, reply) => {
+    return reply.file('./dist/build/application.js');
+  }
+})
+
 application.start();
